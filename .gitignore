@@ -4,7 +4,6 @@ config.py
 Dockerfile
 *.sh
 protected
-README.MD
 requirements.txt
 venv
 .vscode
