@@ -1,1 +1,0 @@
-openssl genrsa 1024 > ssl.key
