@@ -1,0 +1,10 @@
+*.log
+config.py
+*.pyc
+Dockerfile
+gencert.sh
+genkey.sh
+protected
+README.MD
+requirements.txt
+venv
