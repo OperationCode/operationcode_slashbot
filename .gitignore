@@ -7,3 +7,5 @@ protected
 README.MD
 requirements.txt
 venv
+.vscode
+.DS_Store
