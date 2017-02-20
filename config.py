@@ -1,7 +1,8 @@
 #!/usr/bin/env python
+import os
 
-with open('protected/token.txt', 'r') as f:
-    token = f.read()
+
+SLACK_TOKEN = os.environ.get('SLACK_TOKEN')
 
 team_id = 'operation-code'
 ip = '0.0.0.0'

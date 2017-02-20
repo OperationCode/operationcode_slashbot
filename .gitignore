@@ -8,3 +8,4 @@ requirements.txt
 venv
 .vscode
 .DS_Store
+ngrok
