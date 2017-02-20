@@ -13,8 +13,8 @@ Create SSL Keys:
 ### Run this command:
 ```certbot certonly```
 ### Option 2
-```./genkey.sh```
-```./gencert.sh```
+```./genkey.sh
+./gencert.sh```
 
 Run the server:
 
