@@ -1,27 +1,26 @@
 {
-  "name": "awesomeslashcommand",
+  "name": "opcodeslashbot",
   "version": "1.0.0",
   "description": "Operation Code Slash Bot.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "CLIENT_ID=$SLACK_CLIENT_ID CLIENT_SECRET=$SLACK_CLIENT_SECRET VERIFICATION_TOKEN=$VERIFICATION_TOKEN PORT=8765 npm start"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DEGoodmanWilson/easy-peasy-slash-command-app.git"
+    "url": "git+https://github.com/OperationCode/operationcode_slash_commands.git"
   },
   "keywords": [
     "slack",
     "slash command"
   ],
-  "author": "D.E. Goodman-Wilson",
+  "author": "Matthew Bach",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/DEGoodmanWilson/easy-peasy-slash-command-app/issues"
+    "url": "https://github.com/OperationCode/operationcode_slash_commands/issues"
   },
-  "homepage": "https://github.com/DEGoodmanWilson/easy-peasy-slash-command-app#readme",
+  "homepage": "https://github.com/OperationCode/operationcode_slash_commands",
   "engines": {
     "node": "5.1.1"
   },

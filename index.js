@@ -48,7 +48,7 @@ require('env2')('.env');
 
 /* Airtable Setup */
 var Airtable = require('airtable');
-var base = new Airtable({apiKey: process.env.AIRTABLE_API_KEY}).base(AIRTABLE_BASE);
+var base = new Airtable({apiKey: process.env.AIRTABLE_API_KEY}).base(process.env.AIRTABLE_BASE);
 
 /* Grab authentication info from env vars */
 if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET || !process.env.PORT || !process.env.VERIFICATION_TOKEN) {
