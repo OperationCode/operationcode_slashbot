@@ -1,11 +1,15 @@
-FROM ubuntu:latest
+FROM node:boron
 
-RUN apt-get update -y
-RUN apt-get install -y python-pip python-dev build-essential
+# Create app directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-RUN mkdir /app
-WORKDIR /app
+# Install app dependencies
+COPY package.json /usr/src/app/
+RUN npm install
 
-RUN pip install -r requirements.txt
-ENTRYPOINT ["python"]
-CMD ["app.py"]
+# Bundle app source
+COPY . /usr/src/app
+
+EXPOSE 8765
+CMD [ "npm", "start" ]

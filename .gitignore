@@ -41,3 +41,4 @@ protected
 db_slackbutton_slash_command
 arch
 settings.json
+npm-debug.log
