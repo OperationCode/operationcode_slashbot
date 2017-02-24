@@ -123,6 +123,7 @@ controller.on('slash_command', function (slashCommand, message) {
 
             break;
 
+        /* Meetup Events */
         case "/oc": //handle the `\oc` command. This will build out into events
             if (message.token !== process.env.VERIFICATION_TOKEN) {
                 console.log('Bad token', message.token);
@@ -149,6 +150,67 @@ controller.on('slash_command', function (slashCommand, message) {
                         resolve( events );
                     });
                 }).then( events => slashCommand.replyPublic(message, '*OC Events:*\n' + events.join("\n\n")));
+            }
+
+            break;
+
+        /* example: /mentees <language> */
+        // TODO: handle casing to reduce burden on correct syntax
+        // TODO: Create standard function to build queries
+        case "/mentees": 
+            if (message.token !== process.env.VERIFICATION_TOKEN) {
+                console.log('Bad token', message.token);
+                return;
+            }
+            // return all events from the Events airtable
+            if (message.text){
+                let mentees = [];
+                let languageFilter = message.text;
+                new Promise( ( resolve, reject ) => {
+                    base('Mentees').select({
+                        view: 'Main View',
+                        filterByFormula: `{Language} = "${languageFilter}"`
+                    }).firstPage(function(err, records) {
+                        if (err) { console.error(err); reject( err ); }
+
+                        records.forEach(function(record) {
+                            mentees.push('@' + record.get('Slack User'));
+                            
+                        });
+
+                        resolve( mentees );
+                    });
+                }).then( mentees => slashCommand.replyPublic(message, '*Mentees requesting ' +languageFilter+ ':*\n' + mentees.join("\n")));
+            }
+
+            break;
+
+
+        /* example: /mentors <language> */
+        case "/mentors": 
+            if (message.token !== process.env.VERIFICATION_TOKEN) {
+                console.log('Bad token', message.token);
+                return;
+            }
+            // return all events from the Events airtable
+            if (message.text){
+                let mentors = [];
+                let languageFilter = message.text;
+                new Promise( ( resolve, reject ) => {
+                    base('Mentors').select({
+                        view: 'Main View',
+                        filterByFormula: `{Skillsets} = "${languageFilter}"`
+                    }).firstPage(function(err, records) {
+                        if (err) { console.error(err); reject( err ); }
+
+                        records.forEach(function(record) {
+                            mentors.push('@' + record.get('Slack Name'));
+                            
+                        });
+
+                        resolve( mentors );
+                    });
+                }).then( mentors => slashCommand.replyPublic(message, '*Mentors for ' +languageFilter+ ':*\n' + mentors.join("\n")));
             }
 
             break;
