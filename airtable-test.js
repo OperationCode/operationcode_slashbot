@@ -12,7 +12,8 @@ let languageFilter = 'Java';
 new Promise( ( resolve, reject ) => {
     base('Mentees').select({
         view: 'Main View',
-        filterByFormula: `{Language} = "${languageFilter}"`
+        // filterByFormula: `{Language} = "${languageFilter}"`
+        filterByFormula: `SEARCH("${languageFilter}", {Language}) >= 0`
     }).firstPage(function(err, records) {
         if (err) { console.error(err); reject( err ); }
 

@@ -169,7 +169,7 @@ controller.on('slash_command', function (slashCommand, message) {
                 new Promise( ( resolve, reject ) => {
                     base('Mentees').select({
                         view: 'Main View',
-                        filterByFormula: `{Language} = "${languageFilter}"`
+                        filterByFormula: `SEARCH("${languageFilter}", {Language}) >= 0`
                     }).firstPage(function(err, records) {
                         if (err) { console.error(err); reject( err ); }
 
@@ -199,7 +199,8 @@ controller.on('slash_command', function (slashCommand, message) {
                 new Promise( ( resolve, reject ) => {
                     base('Mentors').select({
                         view: 'Main View',
-                        filterByFormula: `{Skillsets} = "${languageFilter}"`
+                        // filterByFormula: `{Skillsets} = "${languageFilter}"`
+                        filterByFormula: `SEARCH("${languageFilter}", {Skillsets}) >= 0`
                     }).firstPage(function(err, records) {
                         if (err) { console.error(err); reject( err ); }
 
