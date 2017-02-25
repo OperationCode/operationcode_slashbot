@@ -37,6 +37,7 @@
  Read all about it here:
 
  -> http://howdy.ai/botkit
+ -> https://github.com/howdyai/botkit
 
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -124,7 +125,8 @@ controller.on('slash_command', function (slashCommand, message) {
             break;
 
         /* Meetup Events */
-        case "/oc": //handle the `\oc` command. This will build out into events
+        /* command /oc events */
+        case "/oc":
             if (message.token !== process.env.VERIFICATION_TOKEN) {
                 console.log('Bad token', message.token);
                 return;
@@ -154,8 +156,7 @@ controller.on('slash_command', function (slashCommand, message) {
 
             break;
 
-        /* example: /mentees <language> */
-        // TODO: handle casing to reduce burden on correct syntax
+        /* command: /mentees <language> */
         // TODO: Create standard function to build queries
         case "/mentees": 
             if (message.token !== process.env.VERIFICATION_TOKEN) {
@@ -166,10 +167,14 @@ controller.on('slash_command', function (slashCommand, message) {
             if (message.text){
                 let mentees = [];
                 let languageFilter = message.text;
+                if (languageFilter.length < 3){
+                    slashCommand.replyPublic(message, '*Length of search param must be 3 or more characters.*');
+                    return;
+                }
                 new Promise( ( resolve, reject ) => {
                     base('Mentees').select({
                         view: 'Main View',
-                        filterByFormula: `SEARCH("${languageFilter}", {Language}) >= 0`
+                        filterByFormula: `SEARCH(LOWER("${languageFilter}"), LOWER({Language})) >= 0`
                     }).firstPage(function(err, records) {
                         if (err) { console.error(err); reject( err ); }
 
@@ -181,12 +186,29 @@ controller.on('slash_command', function (slashCommand, message) {
                         resolve( mentees );
                     });
                 }).then( mentees => slashCommand.replyPublic(message, '*Mentees requesting ' +languageFilter+ ':*\n' + mentees.join("\n")));
+            } else if (message.text == 'unassigned') {
+                let mentees = [];
+                new Promise( ( resolve, reject ) => {
+                    base('Mentees').select({
+                        view: 'Main View',
+                        filterByFormula: `NOT({Assigned?} = "true")`
+                    }).firstPage(function(err, records) {
+                        if (err) { console.error(err); reject( err ); }
+
+                        records.forEach(function(record) {
+                            mentees.push('@' + record.get('Slack User'));
+                            
+                        });
+
+                        resolve( mentees );
+                    });
+                }).then( mentees => slashCommand.replyPublic(message, '*Mentees: *\n' + mentees.join("\n")));
             }
 
             break;
 
 
-        /* example: /mentors <language> */
+        /* command: /mentors <language> */
         case "/mentors": 
             if (message.token !== process.env.VERIFICATION_TOKEN) {
                 console.log('Bad token', message.token);
@@ -196,11 +218,15 @@ controller.on('slash_command', function (slashCommand, message) {
             if (message.text){
                 let mentors = [];
                 let languageFilter = message.text;
+                if (languageFilter.length < 3){
+                    slashCommand.replyPublic(message, '*Length of search param must be 3 or more characters.*');
+                    return;
+                }
+                console.log(languageFilter);
                 new Promise( ( resolve, reject ) => {
                     base('Mentors').select({
                         view: 'Main View',
-                        // filterByFormula: `{Skillsets} = "${languageFilter}"`
-                        filterByFormula: `SEARCH("${languageFilter}", {Skillsets}) >= 0`
+                        filterByFormula: `SEARCH(LOWER("${languageFilter}"), LOWER({Skillsets})) >= 0`
                     }).firstPage(function(err, records) {
                         if (err) { console.error(err); reject( err ); }
 

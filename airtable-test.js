@@ -8,18 +8,17 @@ var base = new Airtable({apiKey: process.env.AIRTABLE_API_KEY}).base(process.env
 
 
 let mentees = [];
-let languageFilter = 'Java';
+let languageFilter = 'JAVA';
 new Promise( ( resolve, reject ) => {
     base('Mentees').select({
         view: 'Main View',
         // filterByFormula: `{Language} = "${languageFilter}"`
-        filterByFormula: `SEARCH("${languageFilter}", {Language}) >= 0`
+        filterByFormula: `NOT({Assigned?} = "true")`
     }).firstPage(function(err, records) {
-        if (err) { console.error(err); reject( err ); }
+        if (err) { console.error(err); reject( err );}
 
         records.forEach(function(record) {
             mentees.push('@' + record.get('Slack User'));
-            
         });
 
         resolve( mentees );
