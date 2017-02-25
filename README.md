@@ -32,4 +32,4 @@ Returns a filtered list of all mentors requesting the provided langauge
 
 ``` /mentees unassigned ```
 
-Returns a list of all mentees without an assigned mentors
+Returns a list of all mentees without an assigned mentor(s)
