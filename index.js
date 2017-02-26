@@ -96,18 +96,12 @@ controller.setupWebserver(process.env.PORT, function (err, webserver) {
 
 
 controller.on('slash_command', function (slashCommand, message) {
-
+    if (message.token !== process.env.VERIFICATION_TOKEN) {
+        console.log('Bad token', message.token);
+        return; //just ignore it.
+    }
     switch (message.command) {
-        case "/echo": //handle the `/echo` slash command. We might have others assigned to this app too!
-            // The rules are simple: If there is no text following the command, treat it as though they had requested "help"
-            // Otherwise just echo back to them what they sent us.
-
-            // but first, let's make sure the token matches!
-            if (message.token !== process.env.VERIFICATION_TOKEN) {
-                console.log('Bad token', message.token);
-                return; //just ignore it.
-            }
-
+        case "/echo":
             // if no text was supplied, treat it as a help command
             if (message.text === "" || message.text === "help") {
                 slashCommand.replyPrivate(message,
@@ -127,82 +121,53 @@ controller.on('slash_command', function (slashCommand, message) {
         /* Meetup Events */
         /* command /oc events */
         case "/oc":
-            if (message.token !== process.env.VERIFICATION_TOKEN) {
-                console.log('Bad token', message.token);
-                return;
-            }
-            // return all events from the Events airtable
             if (message.text == 'events'){
-                let events = [];
-                new Promise( ( resolve, reject ) => {
-                    base('Events').select({
-                        view: 'Main View'
-                    }).firstPage(function(err, records) {
-                        if (err) { console.error(err); reject( err ); }
-
-                        records.forEach(function(record) {
-                            if (record.get('Notes') === undefined){
-                                console.log('Notes: undefined');
-                            } else {
-                                events.push(record.get('Name') + ': ' + record.get('Notes') + ', ' + record.get('Channel'));
-                            }
-                            
-                        });
-
-                        resolve( events );
-                    });
-                }).then( events => slashCommand.replyPublic(message, '*OC Events:*\n' + events.join("\n\n")));
+                base( "Events" ).select( {
+                    view: "Main View"
+                } ).firstPage( ( err, records ) => {
+                    if ( err ) {
+                        return console.error( err );
+                    }
+                    const events = records.map( record => `${ record.get( "Name" ) } ${record.get("Notes")}` );
+                    slashCommand.replyPublic( message, '*OC Events:*\n' + events.join("\n\n"));
+                } );
             }
 
             break;
-
         /* command: /mentees <language> */
         // TODO: Create standard function to build queries
         case "/mentees": 
-            if (message.token !== process.env.VERIFICATION_TOKEN) {
-                console.log('Bad token', message.token);
+            // prevent too ambiguous of a search
+            if (message.text.length < 3){
+                slashCommand.replyPublic(message, '*Length of search param must be 3 or more characters.*');
                 return;
             }
-            // return all events from the Events airtable
-            if (message.text){
-                let mentees = [];
-                let languageFilter = message.text;
-                if (languageFilter.length < 3){
-                    slashCommand.replyPublic(message, '*Length of search param must be 3 or more characters.*');
-                    return;
-                }
-                new Promise( ( resolve, reject ) => {
-                    base('Mentees').select({
-                        view: 'Main View',
-                        filterByFormula: `SEARCH(LOWER("${languageFilter}"), LOWER({Language})) >= 0`
-                    }).firstPage(function(err, records) {
-                        if (err) { console.error(err); reject( err ); }
 
-                        records.forEach(function(record) {
-                            mentees.push('@' + record.get('Slack User'));
-                            
-                        });
+            else if (message.text == 'unassigned'){
+                base( "Mentees" ).select( {
+                    filterByFormula: `NOT({Assigned?} = "true")`
+                    , view: "Main View"
+                } ).firstPage( ( err, records ) => {
+                    if ( err ) {
+                        return console.error( err );
+                    }
+                    const mentees = records.map( record => `@${ record.get( "Slack Name" ) }` );
+                    slashCommand.replyPublic( message, '*Mentees without mentors: *\n' + mentees.join("\n"));
+                } );
+            }
 
-                        resolve( mentees );
-                    });
-                }).then( mentees => slashCommand.replyPublic(message, '*Mentees requesting ' +languageFilter+ ':*\n' + mentees.join("\n")));
-            } else if (message.text == 'unassigned') {
-                let mentees = [];
-                new Promise( ( resolve, reject ) => {
-                    base('Mentees').select({
-                        view: 'Main View',
-                        filterByFormula: `NOT({Assigned?} = "true")`
-                    }).firstPage(function(err, records) {
-                        if (err) { console.error(err); reject( err ); }
-
-                        records.forEach(function(record) {
-                            mentees.push('@' + record.get('Slack User'));
-                            
-                        });
-
-                        resolve( mentees );
-                    });
-                }).then( mentees => slashCommand.replyPublic(message, '*Mentees: *\n' + mentees.join("\n")));
+            else {
+                base( "Mentees" ).select( {
+                    filterByFormula: `SEARCH(LOWER("${message.text}"), LOWER({Language})) >= 1`
+                    , view: "Main View"
+                } ).firstPage( ( err, records ) => {
+                    if ( err ) {
+                        return console.error( err );
+                    }
+                    const mentees = records.map( record => `@${ record.get( "Slack User" ) }` );
+                    console.log(records[ 0 ].get( "Slack User" ));
+                    slashCommand.replyPublic( message, `*Mentees for ${ message.text }:\n ${ mentees.join( "\n" ) }` );
+                } );
             }
 
             break;
@@ -210,34 +175,21 @@ controller.on('slash_command', function (slashCommand, message) {
 
         /* command: /mentors <language> */
         case "/mentors": 
-            if (message.token !== process.env.VERIFICATION_TOKEN) {
-                console.log('Bad token', message.token);
-                return;
-            }
-            // return all events from the Events airtable
             if (message.text){
-                let mentors = [];
-                let languageFilter = message.text;
-                if (languageFilter.length < 3){
+                if (message.text.length < 3){
                     slashCommand.replyPublic(message, '*Length of search param must be 3 or more characters.*');
                     return;
                 }
-                console.log(languageFilter);
-                new Promise( ( resolve, reject ) => {
-                    base('Mentors').select({
-                        view: 'Main View',
-                        filterByFormula: `SEARCH(LOWER("${languageFilter}"), LOWER({Skillsets})) >= 0`
-                    }).firstPage(function(err, records) {
-                        if (err) { console.error(err); reject( err ); }
-
-                        records.forEach(function(record) {
-                            mentors.push('@' + record.get('Slack Name'));
-                            
-                        });
-
-                        resolve( mentors );
-                    });
-                }).then( mentors => slashCommand.replyPublic(message, '*Mentors for ' +languageFilter+ ':*\n' + mentors.join("\n")));
+                base( "Mentors" ).select( {
+                    filterByFormula: `SEARCH(LOWER("${ message.text }"), LOWER({Skillsets})) >= 1`
+                    , view: "Main View"
+                } ).firstPage( ( err, records ) => {
+                    if ( err ) {
+                        return console.error( err );
+                    }
+                    const mentors = records.map( record => `@${ record.get( "Slack Name" ) }` );
+                    slashCommand.replyPublic( message, `*Mentors for ${ message.text }:\n ${ mentors.join( "\n" ) }` );
+                } );
             }
 
             break;
