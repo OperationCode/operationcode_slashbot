@@ -44,9 +44,6 @@
 /* Uses the slack button feature to offer a real time bot to multiple teams */
 var Botkit = require('botkit');
 
-/* load all environment variables from script .env */
-require('env2')('.env');
-
 /* Airtable Setup */
 var Airtable = require('airtable');
 var base = new Airtable({apiKey: process.env.AIRTABLE_API_KEY}).base(process.env.AIRTABLE_BASE);
@@ -73,7 +70,7 @@ var controller = Botkit.slackbot(config).configureSlackApp(
     {
         clientId: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
-        scopes: ['commands'],
+        scopes: ['commands', 'bot'],
     }
 );
 
@@ -96,6 +93,7 @@ controller.setupWebserver(process.env.PORT, function (err, webserver) {
 
 
 controller.on('slash_command', function (slashCommand, message) {
+
     if (message.token !== process.env.VERIFICATION_TOKEN) {
         console.log('Bad token', message.token);
         return; //just ignore it.
@@ -104,6 +102,7 @@ controller.on('slash_command', function (slashCommand, message) {
         case "/echo":
             // if no text was supplied, treat it as a help command
             if (message.text === "" || message.text === "help") {
+                // TODO: reply help with all available OC commands
                 slashCommand.replyPrivate(message,
                     "I echo back what you tell me. " +
                     "Try typing `/echo hello` to see.");
@@ -129,7 +128,7 @@ controller.on('slash_command', function (slashCommand, message) {
                         return console.error( err );
                     }
                     const events = records.map( record => `${ record.get( "Name" ) } ${record.get("Notes")}` );
-                    slashCommand.replyPublic( message, '*OC Events:*\n' + events.join("\n\n"));
+                    slashCommand.replyPrivate( message, '*OC Events:*\n' + events.join("\n\n"));
                 } );
             }
 
@@ -139,7 +138,7 @@ controller.on('slash_command', function (slashCommand, message) {
         case "/mentees": 
             // prevent too ambiguous of a search
             if (message.text.length < 3){
-                slashCommand.replyPublic(message, '*Length of search param must be 3 or more characters.*');
+                slashCommand.replyPrivate(message, '*Length of search param must be 3 or more characters.*');
                 return;
             }
 
@@ -152,7 +151,7 @@ controller.on('slash_command', function (slashCommand, message) {
                         return console.error( err );
                     }
                     const mentees = records.map( record => `@${ record.get( "Slack Name" ) }` );
-                    slashCommand.replyPublic( message, '*Mentees without mentors: *\n' + mentees.join("\n"));
+                    slashCommand.replyPrivate( message, '*Mentees without mentors: *\n' + mentees.join("\n"));
                 } );
             }
 
@@ -166,7 +165,7 @@ controller.on('slash_command', function (slashCommand, message) {
                     }
                     const mentees = records.map( record => `@${ record.get( "Slack User" ) }` );
                     console.log(records[ 0 ].get( "Slack User" ));
-                    slashCommand.replyPublic( message, `*Mentees for ${ message.text }:\n ${ mentees.join( "\n" ) }` );
+                    slashCommand.replyPrivate( message, `*Mentees for ${ message.text }:\n ${ mentees.join( "\n" ) }` );
                 } );
             }
 
@@ -177,7 +176,7 @@ controller.on('slash_command', function (slashCommand, message) {
         case "/mentors": 
             if (message.text){
                 if (message.text.length < 3){
-                    slashCommand.replyPublic(message, '*Length of search param must be 3 or more characters.*');
+                    slashCommand.replyPrivate(message, '*Length of search param must be 3 or more characters.*');
                     return;
                 }
                 base( "Mentors" ).select( {
@@ -188,16 +187,15 @@ controller.on('slash_command', function (slashCommand, message) {
                         return console.error( err );
                     }
                     const mentors = records.map( record => `@${ record.get( "Slack Name" ) }` );
-                    slashCommand.replyPublic( message, `*Mentors for ${ message.text }:\n ${ mentors.join( "\n" ) }` );
+                    slashCommand.replyPrivate( message, `*Mentors for ${ message.text }:\n ${ mentors.join( "\n" ) }` );
                 } );
             }
 
             break;
 
         default:
-            slashCommand.replyPublic(message, "I'm afraid I don't know how to " + message.command + " yet.");
+            slashCommand.replyPrivate(message, "I'm afraid I don't know how to " + message.command + " yet.");
 
     }
 
 });
-
