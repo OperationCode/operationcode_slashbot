@@ -149,7 +149,7 @@ controller.on('slash_command', function (slashCommand, message) {
                     if ( err ) {
                         return console.error( err );
                     }
-                    const mentees = records.map( record => `@${ record.get( "Slack Name" ) }` );
+                    const mentees = records.map( record => `@${ record.get( "Slack User" ) }` );
                     slashCommand.replyPrivate( message, '*Mentees without mentors: *\n' + mentees.join("\n"));
                 } );
             }
