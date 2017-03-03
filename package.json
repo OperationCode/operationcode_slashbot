@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "node index.js & lt --port 8765 --subdomain opcodeslash",
     "lt": "lt --port 8765 --subdomain opcodeslash"
   },
   "repository": {
