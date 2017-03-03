@@ -12,7 +12,6 @@ services:
 
 script:
   - docker build . -t operationcode/operationcode_slashbot:latest
-  - docker run operationcode/operationcode_bot /bin/sh -c 'cd /app && bundle exec rake'
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
