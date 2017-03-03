@@ -1,4 +1,7 @@
-language: javascript
+language: node_js
+node_js:
+  - "iojs"
+  - "6"
 
 sudo: required
 
