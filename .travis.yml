@@ -1,0 +1,20 @@
+language: javascript
+
+sudo: required
+
+install: true
+
+services:
+    - docker
+
+script:
+  - docker build . -t operationcode/operationcode_slashbot:latest
+  - docker run operationcode/operationcode_bot /bin/sh -c 'cd /app && bundle exec rake'
+
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+    docker build . -t operationcode/operationcode_slashbot:latest &&
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" &&
+    docker push operationcode/operationcode_slashbot &&
+    bash ./bin/rancher_upgrade.sh;
+    fi
