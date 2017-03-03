@@ -164,7 +164,7 @@ controller.on('slash_command', function (slashCommand, message) {
                         return console.error( err );
                     }
                     const mentees = records.map( record => `@${ record.get( "Slack User" ) }` );
-                    slashCommand.replyPrivate( message, `*Mentees for ${ message.text }:\n ${ mentees.join( "\n" ) }` );
+                    slashCommand.replyPrivate( message, `*Mentees for ${ message.text }:*\n ${ mentees.join( "\n" ) }` );
                 } );
             }
 
@@ -186,7 +186,7 @@ controller.on('slash_command', function (slashCommand, message) {
                         return console.error( err );
                     }
                     const mentors = records.map( record => `@${ record.get( "Slack Name" ) }` );
-                    slashCommand.replyPrivate( message, `*Mentors for ${ message.text }:\n ${ mentors.join( "\n" ) }` );
+                    slashCommand.replyPrivate( message, `*Mentors for ${ message.text }:*\n ${ mentors.join( "\n" ) }` );
                 } );
             }
 
