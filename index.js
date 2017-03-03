@@ -110,7 +110,6 @@ controller.on('slash_command', function (slashCommand, message) {
             }
 
             // If we made it here, just echo what the user typed back at them
-            //TODO You do it!
             slashCommand.replyPrivate(message, "1", function() {
                 slashCommand.replyPrivate(message, "2").then(slashCommand.replyPrivate(message, "3"));
             });
