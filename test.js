@@ -14,6 +14,7 @@ base( "Mentees" ).select( {
 } );
 
 
+
 text = 'python';
 base( "Mentees" ).select( {
     filterByFormula: `SEARCH(LOWER("${text}"), LOWER({Language})) >= 1`

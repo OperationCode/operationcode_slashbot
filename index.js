@@ -54,11 +54,17 @@ if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET || !process.env.PORT ||
     process.exit(1);
 }
 
+/* 
+  This is required for authorizing the app with slack.
+  Losing the database or json file will require an oauth
+  login to occur again from a slack admin before bot will
+  work
+*/
 var config = {}
-if (process.env.MONGOLAB_URI) {
+if (process.env.MONGO_URI) {
     var BotkitStorage = require('botkit-storage-mongo');
     config = {
-        storage: BotkitStorage({mongoUri: process.env.MONGOLAB_URI}),
+        storage: BotkitStorage({mongoUri: process.env.MONGO_URI}),
     };
 } else {
     config = {
