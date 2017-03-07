@@ -27,8 +27,10 @@
   "dependencies": {
     "airtable": "^0.4.4",
     "botkit": "0.0.5",
-    "botkit-storage-mongo": "^1.0.2",
+    "botkit-storage-mongo": "^1.0.4",
     "env2": "^2.1.1",
-    "mongodb": "^1.4.39"
+    "mongodb": "^2.0",
+    "mongoose": "^4.8.6",
+    "monk": "^4.0.0"
   }
 }
