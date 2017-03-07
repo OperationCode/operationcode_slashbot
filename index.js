@@ -203,3 +203,20 @@ controller.on('slash_command', function (slashCommand, message) {
     }
 
 });
+
+// controller.hears('casey me',['ambient', 'direct_message','direct_mention','mention'],function(bot,message) {
+//   Scrape.request('https://www.youtube.com/user/caseyneistat/videos', function (err, $) {
+//       if (err) return console.error(err);
+
+//       video = $('.channels-content-item .yt-uix-tile-link').first();
+//       url = "https://youtube.com" + video.attribs.href;
+
+//       bot.reply(message, video.text + " " + url);
+//   });
+// });
+
+controller.hears('hello',['direct_message','direct_mention','mention'],function(bot,message) {
+ 
+  bot.reply(message,'Hello yourself.');
+ 
+});
