@@ -7,10 +7,6 @@ Slash commands integrating various api's.
 
 ``` npm start ```
 
-### Run local tunnel
-
-``` lt --port 8765 --subdomain opcodeslash ```
-
 ### Test the library in slack
 
 ``` /oc events ```
