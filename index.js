@@ -211,7 +211,7 @@ controller.on('slash_command', function (slashCommand, message) {
                 xhr.open("POST", url, true);
                 xhr.setRequestHeader("Content-type", "application/json");
                 // Replace {serverKey} with local variable
-                xhr.setRequestHeader("Authorization", {serverKey});
+                xhr.setRequestHeader("Authorization", process.env.firebaseServer);
 
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState == 4 && xhr.status == 200) {
