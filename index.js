@@ -196,6 +196,10 @@ controller.on('slash_command', function (slashCommand, message) {
             }
 
             break;
+        case "/test":
+            slashCommand.replyPrivate("You've hit the server with /test/");
+
+            break;
             /* command: /android <message> */
             //TODO: Add better verification method for authorized users
         case "/android":
