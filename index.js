@@ -199,33 +199,34 @@ controller.on('slash_command', function (slashCommand, message) {
             /* command: /android <message> */
             //TODO: Add better verification method for authorized users
         case "/android":
-            if (message.text && message.user_name == "wcriss44"){
-                if (message.text.length < 3){
-                    slashCommand.replyPrivate(message, '*Length of notification must be 3 or more characters.*');
-                    return;
-                }
-                xhr = new XMLHttpRequest();
-                var url = "https://fcm.googleapis.com/fcm/send";
+            slashCommand.replyPrivate( message, `From the android webhook`);
+            // if (message.text && message.user_name == "wcriss44"){
+            //     // if (message.text.length < 3){
+            //     //     slashCommand.replyPrivate(message, '*Length of notification must be 3 or more characters.*');
+            //     //     return;
+            //     // }
+            //     xhr = new XMLHttpRequest();
+            //     var url = "https://fcm.googleapis.com/fcm/send";
 
-                //Headers
-                xhr.open("POST", url, true);
-                xhr.setRequestHeader("Content-type", "application/json");
-                // Replace {serverKey} with local variable
-                xhr.setRequestHeader("Authorization", process.env.firebaseServer);
+            //     //Headers
+            //     xhr.open("POST", url, true);
+            //     xhr.setRequestHeader("Content-type", "application/json");
+            //     // Replace {serverKey} with local variable
+            //     xhr.setRequestHeader("Authorization", process.env.firebaseServer);
 
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        //Notify if response status is ok
-                        slashCommand.replyPrivate(message, "Notification sent!");
-                    }
-                };
-                //Body
-                var data = JSON.stringify({"to":"/topics/Scholarships","notification":{
-                    "title": "New Scholarship", "body": message.text}});
+            //     xhr.onreadystatechange = function () {
+            //         if (xhr.readyState == 4 && xhr.status == 200) {
+            //             //Notify if response status is ok
+            //             slashCommand.replyPrivate(message, "Notification sent!");
+            //         }
+            //     };
+            //     //Body
+            //     var data = JSON.stringify({"to":"/topics/Scholarships","notification":{
+            //         "title": "New Scholarship", "body": message.text}});
 
-                xhr.send(data);
+            //     xhr.send(data);
 
-            }
+            // }
             break;
 
         default:
