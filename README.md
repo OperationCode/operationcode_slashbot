@@ -1,5 +1,5 @@
 # Operation Code Slack Slashbot
-Slash commands integrating various api's.
+Slash commands integrating various APIs.
 ### Install dependencies
 ```npm install```
 
@@ -24,7 +24,7 @@ Returns a filtered list of all mentees requesting the provided language
 
 ``` /mentors <language> ```
 
-Returns a filtered list of all mentors requesting the provided langauge
+Returns a filtered list of all mentors requesting the provided language
 
 ``` /mentees unassigned ```
 
