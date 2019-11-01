@@ -31,7 +31,7 @@
     "botkit-storage-mongo": "^1.0.4",
     "env2": "^2.1.1",
     "mongodb": "^2.0",
-    "mongoose": "^4.8.6",
+    "mongoose": "^5.7.7",
     "monk": "^4.0.0"
   },
   "collective": {
