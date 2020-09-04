@@ -26,7 +26,7 @@
     "node": "5.1.1"
   },
   "dependencies": {
-    "airtable": "^0.4.4",
+    "airtable": "^0.9.0",
     "botkit": "0.0.5",
     "botkit-storage-mongo": "^1.0.4",
     "env2": "^2.1.1",
