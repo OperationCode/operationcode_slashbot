@@ -26,13 +26,13 @@
     "node": "5.1.1"
   },
   "dependencies": {
-    "airtable": "^0.4.4",
-    "botkit": "0.0.5",
-    "botkit-storage-mongo": "^1.0.4",
-    "env2": "^2.1.1",
-    "mongodb": "^2.0",
-    "mongoose": "^4.8.6",
-    "monk": "^4.0.0"
+    "airtable": "^0.10.0",
+    "botkit": "4.10.0",
+    "botkit-storage-mongo": "^1.0.7",
+    "env2": "^2.2.2",
+    "mongodb": "^3.6",
+    "mongoose": "^5.10.7",
+    "monk": "^7.3.2"
   },
   "collective": {
     "type": "opencollective",
@@ -40,6 +40,6 @@
     "logo": "https://opencollective.com/operationcode/logo.txt"
   },
   "devDependencies": {
-    "opencollective-postinstall": "^1.0.15"
+    "opencollective-postinstall": "^2.0.3"
   }
 }
